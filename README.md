@@ -9,3 +9,5 @@ command to use - ```python finalscript.py dataset.csv```
 ![](workingcode.png)
 
 # Monthly example 
+
+![](monthly.png)
