@@ -6,6 +6,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
+import argparse
 import csv
 
 class Weekly:
@@ -198,46 +199,53 @@ class Yearly:
 
 
 class Runner:
-    def __init__(self,data):
-        dfs = []
-        """
-        MODIFY THESE VARIABLES ACCORDING TO THE DATA
-        For Weekly Data you can enter values between 2 to 52
-        For Monthly Data you can enter values between 2 to 12
-        """
-        # data = "ptcdata.csv"
-        typeofcorr = "weekly"
-        datecol = "date"
-        pricecol = "price"
-        val1 =  10
-        val2 = 15
-   
-   
+    def __init__(self,data,typeofcorr,firstval,secondval,datecol,pricecol):
         if typeofcorr == "weekly":
-            corr = Weekly(data,datecol,pricecol,val1,val2)
+            corr = Weekly(data,datecol,pricecol,firstval,secondval)
             a = corr.final_out()
-            dfs = dfs + [a]
-            dfs = [item.replace(np.NaN,0) for item in dfs]
-            print(dfs)
+            finaldf = a.replace(np.NaN,0)
+            print(finaldf)
+            finaldf.to_excel(f"{typeofcorr}_corr_result.xlsx")
+            fig = plt.figure(figsize=(14,8))
+            fig = sns.heatmap(finaldf,cmap="RdPu",annot=True,linewidth=0.2,annot=True,fmt='.2g')
+            plt.savefig(f"{typeofcorr}_correlation_heatmap.jpg")
             
         elif typeofcorr == "monthly":
-            corr = Monthly(data,datecol,pricecol,val1,val2)
+            corr = Monthly(data,datecol,pricecol,firstval,secondval)
             a = corr.final_out()
-            dfs = dfs + [a]
-            dfs = [item.replace(np.NaN,0) for item in dfs]
-            print(dfs)
+            finaldf = a.replace(np.NaN,0)
+            print(finaldf)
+            finaldf.to_excel(f"{typeofcorr}_corr_result.xlsx")
+            fig = plt.figure(figsize=(20,14))
+            fig = sns.heatmap(finaldf,cmap="RdPu",linewidth=0.2,annot=True,fmt='.2g')
+            plt.savefig(f"{typeofcorr}_correlation_heatmap.jpg")
 
         elif typeofcorr =="yearly":
-            corr = Yearly(data,datecol,pricecol,val1,val2)
+            corr = Yearly(data,datecol,pricecol,firstval,secondval)
             a = corr.final_out()
-            dfs = dfs + [a]
-            dfs = [item.replace(np.NaN,0) for item in dfs]
-            print(dfs)
+            finaldf = a.replace(np.NaN,0)
+            print(finaldf)
+            finaldf.to_excel(f"{typeofcorr}_corr_result.xlsx")
+            fig = plt.figure(figsize=(20,14))
+            fig = sns.heatmap(finaldf,cmap="RdPu",linewidth=0.2,annot=True,fmt='.2g')
+            plt.savefig(f"{typeofcorr}_correlation_heatmap.jpg")
 
-        with open(f'{typeofcorr}_corrmatrix.txt', 'w') as f:
-            for item in dfs:
-                f.write("%s\n" % item)
 
 if __name__=='__main__':
-    data = sys.argv[1]
-    runner = Runner(data)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("typeofcorr",help="choose yearly/monthly/yearly",type=str)
+    parser.add_argument("firstval",help="first week/month number",type=int)
+    parser.add_argument("secondval",help="second week/month number",type=int)
+    parser.add_argument("--datecol",help="enter name of data column",type=str,default='date')
+    parser.add_argument("--pricecol",help="enter name of price column",type=str,default='price')
+    parser.add_argument("data",help="enter csv file name",type=str)
+    args = parser.parse_args()
+
+    typeofcorr = args.typeofcorr
+    firstval = args.firstval
+    secondval = args.secondval
+    datecol = args.datecol
+    pricecol = args.pricecol
+    data = args.data
+
+    runner = Runner(data,typeofcorr,firstval,secondval,datecol,pricecol)
