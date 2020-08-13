@@ -2,12 +2,5 @@
 
 A python script to find correlation for time series data ! 
 
-command to use - ```python finalscript.py dataset.csv```
+**Refer to documentation for HOW TO run the code with sample outputs**
 
-# Weekly example
-
-![](workingcode.png)
-
-# Monthly example 
-
-![](monthly.png)
